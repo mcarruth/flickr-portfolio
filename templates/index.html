@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <!-- Photo grid -->
+        <div id="photo-grid" class="row g-3"></div>
+
+        <!-- Loading indicator -->
+        <div id="loading-indicator" class="text-center my-4 d-none">
+            <div class="spinner-border loading-spinner" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/photoswipe-init.js') }}"></script>
+<script src="{{ url_for('static', filename='js/portfolio.js') }}"></script>
+{% endblock %}

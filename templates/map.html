@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Photo Map{% endblock %}
+
+{% block extra_head %}
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1>Photo Map</h1>
+        <p class="text-muted">Explore photos by location</p>
+        
+        <!-- Map container -->
+        <div id="map" data-api-key="{{ google_maps_key }}"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap" 
+        async defer></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

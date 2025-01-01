@@ -1,3 +1,4 @@
 
 .codegpt
 config.py
+__pycache__

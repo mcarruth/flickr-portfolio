@@ -46,12 +46,14 @@ def get_photos():
                 photos = flickr.get_photos(
                     page=page, per_page=per_page, album_id=album_id
                 )
-                if "photos" in photos and "photo" in photos["photos"]:
-                    all_photos.extend(photos["photos"]["photo"])
+                if "photoset" in photos and "photo" in photos["photoset"]:
+                    all_photos.extend(photos["photoset"]["photo"])
 
         # Get photos with tags if specified
         if tags and tags[0]:  # Check if there are any non-empty tags
-            photos = flickr.get_photos(page=page, per_page=per_page, tags=tags)
+            photos = flickr.get_photos(
+                page=page, per_page=per_page, tags=",".join(tags)
+            )
             if "photos" in photos and "photo" in photos["photos"]:
                 all_photos.extend(photos["photos"]["photo"])
 

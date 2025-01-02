@@ -11,8 +11,8 @@ A simple, elegant way to showcase your Flickr photos on your own website. This a
 ## What You'll Need
 
 1. A Flickr account with your photos
-2. A web hosting account (like GoDaddy, Bluehost, etc.)
-3. FTP access to your web hosting (your host will provide this)
+2. A web hosting account
+3. FTP or SSH access to your web hosting (your host will provide this)
 
 ---
 
@@ -42,30 +42,47 @@ Save these somewhere safe!
 
 ---
 
-### 3. Downloading the Code
+### 3. Setting Environment Variables
+
+Set the required environment variables for your application:
+
+#### **Locally (For Testing)**
+
+1. Open a terminal in your project directory.
+2. Set the variables in your terminal session:
+   ```bash
+   export FLICKR_API_KEY=your_api_key
+   export FLICKR_SECRET=your_api_secret
+   export FLICKR_USER_ID=your_user_id
+   ```
+3. These variables will only persist for the current terminal session. To make them persistent, you can add them to your shell configuration file (e.g., `.bashrc`, `.zshrc`).
+
+#### **On the Server (For Deployment)**
+
+1. Access your server via SSH or your hosting provider's control panel.
+2. Set the environment variables in the server's environment configuration.
+   - For Linux servers, you can add the variables to the `.bashrc` or `.bash_profile` file for the user running the application:
+     ```bash
+     export FLICKR_API_KEY=your_api_key
+     export FLICKR_SECRET=your_api_secret
+     export FLICKR_USER_ID=your_user_id
+     ```
+   - Alternatively, if your hosting platform allows you to define environment variables via a control panel, add the following:
+     ```
+     FLICKR_API_KEY    your_api_key
+     FLICKR_SECRET     your_api_secret
+     FLICKR_USER_ID    your_user_id
+     ```
+3. Restart your application to ensure the variables are loaded.
+
+---
+
+### 4. Downloading the Code
 
 1. Visit the GitHub repository page.
 2. Click the green **"Code"** button.
 3. Choose **"Download ZIP"**.
 4. Extract the ZIP file on your computer.
-
----
-
-### 4. Setting Up Your Environment Variables
-
-1. **Locate the `example.env` File**:
-   - In the downloaded project folder, locate the file named `example.env`.
-
-2. **Create Your `.env` File**:
-   - Make a copy of `example.env` and rename it to `.env`.
-
-3. **Update the `.env` File**:
-   - Open `.env` in a text editor and replace the placeholder values with your Flickr API details:
-     ```plaintext
-     FLICKR_API_KEY=your_api_key
-     FLICKR_SECRET=your_api_secret
-     FLICKR_USER_ID=your_user_id
-     ```
 
 ---
 
@@ -138,7 +155,7 @@ Save these somewhere safe!
    - Ensure your hosting provider supports Python 3.11 or newer.
 
 2. **Upload Your Files**:
-   - Use an FTP program (e.g., FileZilla) to upload the application files to your web host's directory (e.g., `public_html`).
+   - Use an FTP or SSH program (e.g., FileZilla or your terminal) to upload the application files to your web host's directory (e.g., `public_html`).
 
 3. **Install Dependencies on the Server**:
    - If your web host provides SSH access:
@@ -146,10 +163,13 @@ Save these somewhere safe!
      pip install -r requirements.txt --user
      ```
 
-4. **Start the Application**:
+4. **Set Environment Variables on the Server**:
+   - Ensure the environment variables for `FLICKR_API_KEY`, `FLICKR_SECRET`, and `FLICKR_USER_ID` are correctly set (as described in Step 3: Setting Environment Variables).
+
+5. **Start the Application**:
    - Follow your hosting provider's instructions for running Python web applications.
 
-5. **Access Your Website**:
+6. **Access Your Website**:
    - Visit your domain (e.g., `https://yourdomain.com`) to see your live portfolio.
 
 ---
@@ -167,7 +187,7 @@ Your web hosting needs to support:
 If you run into any issues:
 1. Double-check your Flickr API keys and user ID.
 2. Ensure all files were uploaded to your web host.
-3. Contact your web hosting provider's support for assistance with FTP access or Python configuration.
+3. Contact your web hosting provider's support for assistance with FTP or Python configuration.
 
 ---
 

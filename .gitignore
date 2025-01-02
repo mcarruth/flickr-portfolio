@@ -1,5 +1,7 @@
 
-.codegpt
-config.py
 __pycache__
+.codegpt
+env
+.env
 .gitignore
+config.py

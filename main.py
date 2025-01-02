@@ -1,3 +1,4 @@
+import os
 import logging
 from flask import Flask, render_template, jsonify, request
 from config import Config
@@ -12,9 +13,9 @@ app.config.from_object(Config)
 
 # Initialize Flickr client
 flickr = FlickrClient(
-    api_key=app.config["FLICKR_API_KEY"],
-    secret=app.config["FLICKR_SECRET"],
-    user_id=app.config["FLICKR_USER_ID"],
+    api_key=os.getenv("FLICKR_API_KEY"),
+    secret=os.getenv("FLICKR_SECRET"),
+    user_id=os.getenv("FLICKR_USER_ID"),
 )
 
 

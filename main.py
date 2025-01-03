@@ -30,7 +30,7 @@ def index():
 
 
 @app.route("/photos")
-def get_photos():
+def get_photos(has_geo=None):
     page = request.args.get("page", 1, type=int)
     per_page = min(100, request.args.get("per_page", 50, type=int))
 
@@ -45,7 +45,7 @@ def get_photos():
         if album_ids and album_ids[0]:  # Check if there are any non-empty album IDs
             for album_id in album_ids:
                 photos = flickr.get_photos(
-                    page=page, per_page=per_page, album_id=album_id
+                    page=page, per_page=per_page, album_id=album_id, has_geo=has_geo
                 )
                 if "photoset" in photos and "photo" in photos["photoset"]:
                     all_photos.extend(photos["photoset"]["photo"])
@@ -53,14 +53,14 @@ def get_photos():
         # Get photos with tags if specified
         if tags and tags[0]:  # Check if there are any non-empty tags
             photos = flickr.get_photos(
-                page=page, per_page=per_page, tags=",".join(tags)
+                page=page, per_page=per_page, tags=",".join(tags), has_geo=has_geo
             )
             if "photos" in photos and "photo" in photos["photos"]:
                 all_photos.extend(photos["photos"]["photo"])
 
         # If no filters are set, get all public photos
         if not (tags and tags[0]) and not (album_ids and album_ids[0]):
-            photos = flickr.get_photos(page=page, per_page=per_page)
+            photos = flickr.get_photos(page=page, per_page=per_page, has_geo=has_geo)
             if "photos" in photos and "photo" in photos["photos"]:
                 all_photos.extend(photos["photos"]["photo"])
 
@@ -93,6 +93,20 @@ def photo_info(photo_id):
         return jsonify(photo["photo"])
     except Exception as e:
         logger.error(f"Error fetching photo info: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/map")
+def map():
+    return render_template("map.html")
+
+
+@app.route("/geotagged-photos")
+def geotagged_photos():
+    try:
+        return get_photos(has_geo=True)
+    except Exception as e:
+        logger.error(f"Error fetching geotagged photos: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 

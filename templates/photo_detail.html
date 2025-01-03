@@ -5,10 +5,13 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8">
-        <!-- Photo -->
-        <img src="{{ photo.photo.urls.url[-1]._content }}" 
+        <!-- Photo Thumbnail -->
+         <img src="{{ photo.photo.sizes['Medium'] }}" 
              class="img-fluid rounded" 
              alt="{{ photo.photo.title._content }}">
+        <!-- <img src="{{ photo.photo.urls.url[-1]._content }}" 
+             class="img-fluid rounded" 
+             alt="{{ photo.photo.title._content }}"> -->
     </div>
 
     <div class="col-md-4">
@@ -17,7 +20,17 @@
 
         <p class="text-muted">
             Taken on {{ photo.photo.dates.taken }}
-        </p>
+        </p>    
+
+        <!-- Owner -->
+        <div class="mb-4">
+            <h4>Owner</h4>
+            <p>
+                <a href="https://www.flickr.com/people/{{ photo.photo.owner.nsid }}" target="_blank">
+                    {{ photo.photo.owner.username }}
+                </a>
+            </p>
+        </div>
 
         {% if photo.photo.description._content %}
         <div class="mb-4">
@@ -27,12 +40,14 @@
         {% endif %}
 
         <!-- Tags -->
+        {% if photo.photo.tags.tag %}
         <div class="mb-4">
             <h4>Tags</h4>
             {% for tag in photo.photo.tags.tag %}
             <span class="badge bg-secondary me-1">{{ tag.raw }}</span>
             {% endfor %}
         </div>
+        {% endif %}
 
         <!-- EXIF Data -->
         {% if photo.photo.exif %}

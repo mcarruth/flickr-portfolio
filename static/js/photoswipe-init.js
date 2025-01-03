@@ -67,11 +67,11 @@ class PhotoSwipeInitializer {
                     <div class="exif-info">
                         ${exifInfo}
                     </div>
-                    <a href="https://www.flickr.com/photos/${photoInfo.owner.nsid}/${photoInfo.id}" 
+                    <a href="/photo/${photoInfo.id}" 
                        class="flickr-link" 
                        target="_blank"
                        rel="noopener noreferrer">
-                        View on Flickr
+                        View full exif data
                     </a>
                 </div>
             `;

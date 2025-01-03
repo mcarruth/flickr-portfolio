@@ -31,13 +31,15 @@ class FlickrClient:
             raise
 
     @lru_cache(maxsize=100)
-    def get_photos(self, page=1, per_page=100, tags=None, album_id=None):
+    def get_photos(self, page=1, per_page=100, tags=None, album_id=None, has_geo=None):
         params = {
             "user_id": self.user_id,
             "page": page,
             "per_page": per_page,
-            "extras": "description,date_taken,geo,tags,url_sq,url_m,url_l",
+            "extras": "description,license,date_taken,owner_name,geo,url_sq,url_o,url_sq,url_m,url_l,tags",
         }
+        if has_geo is not None:
+            params["has_geo"] = 1
 
         if tags:
             method = "flickr.photos.search"
@@ -60,16 +62,16 @@ class FlickrClient:
             "photo", {}
         )
 
+        # Get direct photo URLs
+        sizes = self._make_request("flickr.photos.getSizes", photo_id=photo_id).get(
+            "sizes", {}
+        )
+        info["photo"]["sizes"] = {
+            size["label"]: size["source"]
+            for size in sizes.get("size", [])
+            if size["label"] in ["Thumbnail", "Small", "Medium", "Large"]
+        }
+
         # Combine info with EXIF data
         info["photo"]["exif"] = exif.get("exif", [])
         return info
-
-    @lru_cache(maxsize=1)
-    def get_geotagged_photos(self):
-        params = {
-            "user_id": self.user_id,
-            "has_geo": 1,
-            "extras": "geo,url_sq,url_m",
-            "per_page": 500,
-        }
-        return self._make_request("flickr.photos.search", **params)

@@ -20,6 +20,16 @@
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">{{ portfolio_title }}</a>
         </div>
+        <!-- Dropdown Menu: Home and Map -->
+        <div class="dropdown navbar-dark bg-dark mb-4">
+            <button class="btn bg-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Menu
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="{{ url_for('index') }}">Home</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('map') }}">Map</a></li>
+            </ul>
+        </div>
     </nav>
 
     <!-- Main content -->

@@ -18,7 +18,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-dark bg-dark mb-4">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">{{ portfolio_title }}</a>
+            <a class="navbar-brand mx-auto" href="{{ url_for('index') }}">{{ portfolio_title }}</a>
         </div>
         <!-- Dropdown Menu: Home and Map -->
         <div class="dropdown navbar-dark bg-dark mb-4">
@@ -26,7 +26,7 @@
                 Menu
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="{{ url_for('index') }}">Home</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('index') }}">Portfolio</a></li>
                 <li><a class="dropdown-item" href="{{ url_for('map') }}">Map</a></li>
             </ul>
         </div>

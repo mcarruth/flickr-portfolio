@@ -55,11 +55,11 @@ class PortfolioGrid {
     renderPhotos(photos) {
         photos.forEach(photo => {
             const photoCard = document.createElement('div');
-            photoCard.className = 'col-md-4 col-lg-3 mb-4';
+            photoCard.className = 'col-md-6 col-lg-6 mb-6';
 
             // Get the largest available image URL for lightbox
             const largeImageUrl = photo.url_l || photo.url_m;
-            const thumbnailUrl = photo.url_m;
+            const thumbnailUrl = largeImageUrl;
 
             photoCard.innerHTML = `
                 <div class="card h-100 border-0">

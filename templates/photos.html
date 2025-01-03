@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+{% block head_content %}{% endblock %}
+{% block header_content %}{% endblock %}
+{% block main_content %}
+<div class="row g-2">
+
+    <!--Iterate over data.photos -->
+    {% for photo in data.photos.photo %}
+    <div class="col-md-6">
+        <div class="bg-image hover-overlay ripple">
+            <img src="{{photo.url_l}}" class="img-fluid" />
+            <a href="#!">
+                <div class="mask" style="background-color: rgba(255, 255, 255, 0.2);">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <p class="text-white mb-0">{{photo.title}}</p>
+                      </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block footer_content %}{% endblock %}

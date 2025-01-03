@@ -1,59 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+    
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ portfolio_title }}{% endblock %}</title>
-
-    <!-- Bootstrap dark theme -->
-    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
-    <!-- PhotoSwipe CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe.min.css">
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-
-    {% block extra_head %}{% endblock %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>{%block title%}{{config['PORTFOLIO_TITLE']}}{% endblock %}</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css">
 </head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-dark bg-dark mb-4">
+
+<body class="bg-{{config['SITE_THEME']}}">
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg bg-{{config['SITE_THEME']}} navbar-{{config['SITE_THEME']}}">
+            <!-- Container wrapper -->
+            <div class="container-fluid">
+
+                <!-- Navbar brand -->
+                <a class="navbar-brand" href="#">{{config['PORTFOLIO_TITLE']}}</a>
+
+                <!-- Collapsible wrapper -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% for link in config['NAVBAR_LINKS'] %}
+                        {% if link.visible %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ link.url }}">{{ link.name }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <!-- Icons -->
+                    <ul class="navbar-nav d-flex flex-row me-1">
+                        {% for link in config['SOCIAL_LINKS'] %}
+                        {% if link.visible %}
+                        <li class="nav-item me-3 me-lg-0">
+                            <a class="nav-link" href="{{ link.url }}"><i class="{{ link.icon }}"></i></a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <!-- Search -->
+                    {% if config['ENABLE_SEARCH'] %}
+                    <form class="w-auto" action="/photos" method="get">
+                        <input type="search" class="form-control" name="search" placeholder="Search"
+                            aria-label="Search">
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Container wrapper -->
+        </nav>
+        <!-- Navbar -->
+        {% block header_content %}{% endblock %}
+    </header>
+    <main>
         <div class="container">
-            <a class="navbar-brand mx-auto" href="{{ url_for('index') }}">{{ portfolio_title }}</a>
+        {% block main_content %}{% endblock %}
         </div>
-        <!-- Dropdown Menu: Home and Map -->
-        <div class="dropdown navbar-dark bg-dark mb-4">
-            <button class="btn bg-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                Menu
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="{{ url_for('index') }}">Portfolio</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('map') }}">Map</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Main content -->
-    <main class="container">
-        {% block content %}{% endblock %}
     </main>
-
-    <!-- Footer -->
-    <footer class="footer mt-5 py-3 bg-dark">
-        <div class="container text-center">
-            <span class="text-muted">Powered by Flickr API</span>
-        </div>
+    <footer class="text-center fixed-bottom">
+        <ul class="list-inline">
+            <li class="list-inline-item">{{config['COPYRIGHT_TEXT']}}</li>
+            <li class="list-inline-item"><a class="nav-link" href="https://flickr.com"><i class="fab fa-flickr"></i></a>
+            </li>
+            <li class="list-inline-item"><a class="nav-link" href="https://github.com/mcarruth/flickr-portfolio"><i
+                        class="fab fa-github"></i></a></li>
+        </ul>
+        {% block footer_content %}{% endblock %}
     </footer>
-
-    <!-- PhotoSwipe -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/umd/photoswipe.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/umd/photoswipe-lightbox.umd.min.js"></script>
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-    <!-- Bootstrap JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"></script>
     {% block scripts %}{% endblock %}
 </body>
+
 </html>

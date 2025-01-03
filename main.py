@@ -4,111 +4,143 @@ from flask import Flask, render_template, jsonify, request
 from config import Config
 from flickr_client import FlickrClient
 
-# Configure logging
+
+# region Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(Config)
+# endregion
 
-# Initialize Flickr client
+# region Initialize Flickr client
 flickr = FlickrClient(
     api_key=os.getenv("FLICKR_API_KEY"),
     secret=os.getenv("FLICKR_SECRET"),
     user_id=os.getenv("FLICKR_USER_ID"),
 )
+# endregion
+
+
+# region Inject config variables into templates
 
 
 @app.context_processor
-def inject_portfolio_title():
-    return {"portfolio_title": app.config["PORTFOLIO_TITLE"]}
+def inject_config():
+    return {"config": app.config}
 
 
+# endregion
+
+
+# region Routes
 @app.route("/")
-def index():
-    return render_template("index.html")
-
-
 @app.route("/photos")
-def get_photos(has_geo=None):
-    page = request.args.get("page", 1, type=int)
-    per_page = min(100, request.args.get("per_page", 50, type=int))
-
-    # Get filters from configuration
-    tags = app.config["PHOTO_FILTERS"]["tags"]
-    album_ids = app.config["PHOTO_FILTERS"]["album_ids"]
-
+def index():
     try:
-        all_photos = []
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", app.config["MAX_PHOTOS"], type=int)
+        tags = request.args.get("tags", app.config["PHOTO_FILTERS"]["tags"])
+        album_id = request.args.get("album_id", app.config["PHOTO_FILTERS"]["album_id"])
+        search_query = request.args.get("search")
+        debug = request.args.get("debug", "false").lower() == "true"
 
-        # Get photos for each album ID if specified
-        if album_ids and album_ids[0]:  # Check if there are any non-empty album IDs
-            for album_id in album_ids:
-                photos = flickr.get_photos(
-                    page=page, per_page=per_page, album_id=album_id, has_geo=has_geo
-                )
-                if "photoset" in photos and "photo" in photos["photoset"]:
-                    all_photos.extend(photos["photoset"]["photo"])
+        data = flickr.get_photos(
+            page=page,
+            per_page=per_page,
+            tags=tags,
+            album_id=album_id,
+            search_query=search_query,
+        )
 
-        # Get photos with tags if specified
-        if tags and tags[0]:  # Check if there are any non-empty tags
-            photos = flickr.get_photos(
-                page=page, per_page=per_page, tags=",".join(tags), has_geo=has_geo
-            )
-            if "photos" in photos and "photo" in photos["photos"]:
-                all_photos.extend(photos["photos"]["photo"])
-
-        # If no filters are set, get all public photos
-        if not (tags and tags[0]) and not (album_ids and album_ids[0]):
-            photos = flickr.get_photos(page=page, per_page=per_page, has_geo=has_geo)
-            if "photos" in photos and "photo" in photos["photos"]:
-                all_photos.extend(photos["photos"]["photo"])
-
-        # Sort photos by date taken (most recent first)
-        all_photos.sort(key=lambda x: x.get("datetaken", ""), reverse=True)
-
-        # Limit the number of photos to prevent memory issues
-        all_photos = all_photos[: app.config["MAX_PHOTOS"]]
-
-        return jsonify({"photos": {"photo": all_photos}})
+        if debug:
+            return jsonify(data)
+        return render_template("photos.html", data=data)
     except Exception as e:
-        logger.error(f"Error fetching photos: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        logger.error(f"Error fetching photos: {e}")
+        return render_template("error.html", message="Unable to load photos"), 500
 
 
-@app.route("/photo/<photo_id>")
-def photo_detail(photo_id):
+@app.route("/albums")
+def albums():
     try:
-        photo = flickr.get_photo_info(photo_id)
-        return render_template("photo_detail.html", photo=photo)
+        debug = request.args.get("debug", "false").lower() == "true"
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", 100, type=int)
+
+        data = flickr.get_photosets(page=page, per_page=per_page)
+
+        if debug:
+            return jsonify(data)
+        return render_template("albums.html", data=data)
     except Exception as e:
-        logger.error(f"Error fetching photo details: {str(e)}")
-        return render_template("photo_detail.html", error=str(e))
+        logger.error(f"Error fetching albums: {e}")
+        return render_template("error.html", message="Unable to load albums"), 500
 
 
-@app.route("/photo/<photo_id>/info")
-def photo_info(photo_id):
+@app.route("/tags")
+def tags():
     try:
-        photo = flickr.get_photo_info(photo_id)
-        return jsonify(photo["photo"])
+        debug = request.args.get("debug", "false").lower() == "true"
+
+        data = flickr.get_tags()
+
+        if debug:
+            return jsonify(data)
+        return render_template("tags.html", data=data)
     except Exception as e:
-        logger.error(f"Error fetching photo info: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        logger.error(f"Error fetching tags: {e}")
+        return render_template("error.html", message="Unable to load tags"), 500
 
 
 @app.route("/map")
 def map():
-    return render_template("map.html")
-
-
-@app.route("/geotagged-photos")
-def geotagged_photos():
     try:
-        return get_photos(has_geo=True)
-    except Exception as e:
-        logger.error(f"Error fetching geotagged photos: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", app.config["MAX_PHOTOS"], type=int)
+        debug = request.args.get("debug", "false").lower() == "true"
 
+        data = flickr.get_photos(page=page, per_page=per_page, has_geo=True)
+
+        if debug:
+            return jsonify(data)
+        return render_template("map.html", data=data)
+    except Exception as e:
+        logger.error(f"Error fetching map: {e}")
+        return render_template("error.html", message="Unable to load places"), 500
+
+
+@app.route("/about")
+def about():
+    try:
+        debug = request.args.get("debug", "false").lower() == "true"
+
+        data = flickr.get_profile()
+
+        if debug:
+            return jsonify(data)
+        return render_template("about.html", data=data)
+    except Exception as e:
+        logger.error(f"Error fetching about: {e}")
+        return render_template("error.html", message="Unable to load about"), 500
+
+
+@app.route("/exif/<photo_id>")
+def exif(photo_id):
+    try:
+        debug = request.args.get("debug", "false").lower() == "true"
+
+        data = flickr.get_exif(photo_id)
+
+        if debug:
+            return jsonify(data)
+        return render_template("exif.html", data=data)
+    except Exception as e:
+        logger.error(f"Error fetching photo: {e}")
+        return render_template("error.html", message="Unable to load photo"), 500
+
+
+# endregion
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -7,14 +7,16 @@
 {% block main_content %}
 <div class="row">
     {% for photo in photos %}
-    <div class="col-lg-12 col-md-12 mb-12 mb-lg-0 mx-auto">
-        <div class="bg-image hover-overlay">
-            <img src="{{photo.url_l or photo.url_m}}" class="w-100 shadow-1-strong rounded mb-4" />
-            <div class="mask" style="background-color: rgba(0, 0, 0, 0.2);">
-                <div class="d-flex justify-content-center align-items-center h-100">
-                    <p class="text-white mb-0">{{photo.title}}</p>
+    <div class="col-lg-12 col-md-12 mb-4">
+        <div class="bg-image hover-overlay rounded" data-mdb-ripple-init data-mdb-ripple-color="light">
+            <img src="{{photo.url_l or photo.url_m}}" class="w-100" />
+            <a href="/photos/{{photo.id}}">
+                <div class="mask" style="background-color: hsla(0, 0%, 98%, 0.2)">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <p class="text-white mb-0">{{photo.title}}</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
     {% endfor %}

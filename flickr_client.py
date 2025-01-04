@@ -63,7 +63,11 @@ class FlickrClient:
 
         photos = []
 
-        if tags:
+        if search_query:
+            method = "flickr.photos.search"
+            params["text"] = search_query
+            photos = self._make_request(method, **params)
+        elif tags:
             method = "flickr.photos.search"
             params["tags"] = tags
             photos = self._make_request(method, **params)
@@ -73,10 +77,6 @@ class FlickrClient:
             photos = self._make_request(method, **params)
         elif has_geo:
             method = "flickr.photos.search"
-            photos = self._make_request(method, **params)
-        elif search_query:
-            method = "flickr.photos.search"
-            params["text"] = search_query
             photos = self._make_request(method, **params)
         else:
             method = "flickr.people.getPublicPhotos"
@@ -95,16 +95,33 @@ class FlickrClient:
         return self._make_request("flickr.photosets.getList", **params)
 
     @lru_cache(maxsize=100)
-    def get_tags(self):
-        params = {"user_id": self.user_id, "count": 1000}
-        return self._make_request("flickr.tags.getListUserPopular", **params)
-
-    @lru_cache(maxsize=100)
-    def get_profile(self):
-        params = {"user_id": self.user_id}
-        return self._make_request("flickr.profile.getProfile", **params)
-
-    @lru_cache(maxsize=100)
-    def get_exif(self, photo_id):
+    def get_photo(self, photo_id):
         params = {"photo_id": photo_id, "secret": self.secret}
-        return self._make_request("flickr.photos.getExif", **params)
+        info = self._make_request("flickr.photos.getInfo", **params)
+        exif = self._make_request("flickr.photos.getExif", **params)
+        sizes = self._make_request("flickr.photos.getSizes", **params)
+
+        if not info or not exif or not sizes:
+            return None
+
+        # Merge additional data into the main info
+        merged_data = info
+        merged_data["photo"]["exif"] = exif.get("photo", {}).get("exif", [])
+        merged_data["photo"]["sizes"] = sizes.get("sizes", {}).get("size", [])
+
+        # Find the largest available size
+        largest_img_url = None
+        size_order = ["Large 2048", "Large 1600", "Large", "Medium 640", "Medium"]
+        for size_label in size_order:
+            for size in merged_data["photo"]["sizes"]:
+                if size["label"] == size_label:
+                    largest_img_url = size["source"]
+                    break
+            if largest_img_url:
+                break
+
+        # Add the largest image URL to the URLs array
+        if largest_img_url:
+            merged_data["photo"]["urls"]["img_url"] = largest_img_url
+
+        return merged_data

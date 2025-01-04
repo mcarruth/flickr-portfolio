@@ -1,28 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Photo Map{% endblock %}
-
-{% block extra_head %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
+{% block title %}Map View{% endblock %}
+{% block head_scripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 {% endblock %}
-
-{% block content %}
+{% block header_content %}{% endblock %}
+{% block main_content %}
 <div class="row">
-    <div class="col">
-        <h1>Photo Map</h1>
-        <p class="text-muted">Explore photos by location</p>
-        
-        <!-- Map container -->
-        <div id="map"></div>
-    </div>
+    <div class="col-lg-12 col-md-12 mb-4 mb-lg-0"></div>
+
+    <!-- Map container -->
+    <div id="map" style="height: 900px;"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Add markers from data
+        let photosData = {{ data.photos.photo | tojson | safe }};
+
+        // Get the latest photo (assuming the first one is the latest)
+        let latestPhoto = photosData[0];
+
+        // Set map view to the latest photo's location
+        var map = L.map('map').setView([latestPhoto.latitude, latestPhoto.longitude], 10);
+
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Loop through and add all markers
+        photosData.forEach(photo => {
+            L.marker([photo.latitude, photo.longitude])
+                .addTo(map)
+                .bindPopup(`<a href="/photos/${photo.id}"><strong>${photo.title}</strong><br><img src="${photo.url_s}" alt="${photo.title}" style="width:100px;"></a>`);
+        });
+    </script>ƒ
 </div>
 {% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/map.js') }}"></script>
-{% endblock %}
+{% block footer_content %}{% endblock %}
+{% block body_scripts %}{% endblock %}

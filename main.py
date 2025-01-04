@@ -36,7 +36,7 @@ def inject_config():
 # region Routes
 @app.route("/")
 @app.route("/photos")
-def index():
+def get_photos():
     try:
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", app.config["MAX_PHOTOS"], type=int)
@@ -66,7 +66,7 @@ def index():
 
 
 @app.route("/albums")
-def albums():
+def get_albums():
     try:
         debug = request.args.get("debug", "false").lower() == "true"
         page = request.args.get("page", 1, type=int)
@@ -82,23 +82,8 @@ def albums():
         return render_template("error.html", message="Unable to load albums"), 500
 
 
-@app.route("/tags")
-def tags():
-    try:
-        debug = request.args.get("debug", "false").lower() == "true"
-
-        data = flickr.get_tags()
-
-        if debug:
-            return jsonify(data)
-        return render_template("tags.html", data=data)
-    except Exception as e:
-        logger.error(f"Error fetching tags: {e}")
-        return render_template("error.html", message="Unable to load tags"), 500
-
-
 @app.route("/map")
-def map():
+def get_map():
     try:
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", app.config["MAX_PHOTOS"], type=int)
@@ -114,31 +99,16 @@ def map():
         return render_template("error.html", message="Unable to load places"), 500
 
 
-@app.route("/about")
-def about():
+@app.route("/photos/<photo_id>")
+def get_photo_by_id(photo_id):
     try:
         debug = request.args.get("debug", "false").lower() == "true"
 
-        data = flickr.get_profile()
+        data = flickr.get_photo(photo_id=photo_id)
 
         if debug:
             return jsonify(data)
-        return render_template("about.html", data=data)
-    except Exception as e:
-        logger.error(f"Error fetching about: {e}")
-        return render_template("error.html", message="Unable to load about"), 500
-
-
-@app.route("/exif/<photo_id>")
-def exif(photo_id):
-    try:
-        debug = request.args.get("debug", "false").lower() == "true"
-
-        data = flickr.get_exif(photo_id)
-
-        if debug:
-            return jsonify(data)
-        return render_template("exif.html", data=data)
+        return render_template("photo.html", data=data)
     except Exception as e:
         logger.error(f"Error fetching photo: {e}")
         return render_template("error.html", message="Unable to load photo"), 500

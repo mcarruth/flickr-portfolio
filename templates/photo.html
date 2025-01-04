@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Photo Gallery{% endblock %}
+
+{% block main_content %}
+<div class="row">
+    <div class="col-lg-12 col-md-12 mb-4 mb-lg-0">
+        <div class="card">
+            <img src="{{data.photo.urls.img_url}}" class="card-img-top" alt="{{data.photo.title._content}}" />
+            <div class="card-body">
+                <h5 class="card-title">{{ data.photo.title._content }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{data.photo.description._content}}</h6>
+                <p class="card-text">
+                    {% for exif in data.photo.exif %}
+                    {% if exif.label in ['Make', 'Model', 'Exposure', 'Aperture', 'Flash', 'Focal Length'] %}
+                    <span class="badge bg-dark">{{exif.label}}: {{exif.raw._content}}</span>
+                    {% endif %}
+                    {% endfor %}
+                </p>
+                <div class="card-footer text-muted">
+                    <div class="d-flex">
+                        <div class="p-2 me-auto">Taken on {{data.photo.dates.taken}}</div>
+                        <div class="p-2">{{data.photo.views}} views</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

@@ -27,6 +27,18 @@
                 <!-- Navbar brand -->
                 <a class="navbar-brand" href="/">{{config['PORTFOLIO_TITLE']}}</a>
 
+                <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <i class="fas fa-bars"></i>
+              </button>
+
                 <!-- Collapsible wrapper -->
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -38,6 +50,8 @@
                         {% endif %}
                         {% endfor %}
                     </ul>
+                </div>
+                <div class="d-flex">
                     <!-- Icons -->
                     <ul class="navbar-nav d-flex flex-row me-1">
                         {% for link in config['SOCIAL_LINKS'] %}
@@ -77,6 +91,7 @@
         </ul>
         {% block footer_content %}{% endblock %}
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.7/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"></script>
     {% block body_scripts %}{% endblock %}
 </body>

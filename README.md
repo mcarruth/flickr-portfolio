@@ -2,11 +2,19 @@
 
 A simple, elegant way to showcase your Flickr photos on your own website. This application automatically displays your Flickr photos in a beautiful gallery format, complete with:
 
-- Photo galleries with smooth transitions
+- Most recent photos view
+- Search functionality to find photos by title, desc, or tags
+- Photo album view
 - Detailed photo information display
 - Location mapping for geotagged photos
-- Tag-based organization
+- Tag and albumb photo filtering
 - Mobile-friendly design
+
+## Main pages
+- Home page which shows 500 most recent photos or photos configured to be displayed with matching tags or from a specified albumb id
+- Album page shows public albumbs in a grid that when clicked opens the contained photos
+- Map page displays a map showing the location of your most recent geo enabled photos
+- Clicking on a specific photo on any of the above three pages, opens the photo detail page with view stats and exif data
 
 ## What You'll Need
 
@@ -94,16 +102,24 @@ Set the required environment variables for your application:
    - Open `config.py` in a text editor (like Notepad).
    - Update these settings:
      ```python
-     PORTFOLIO_TITLE = 'Your Name Photography'  # Change to your desired title
+      PORTFOLIO_TITLE = ""  # Change this to your desired title
+      COPYRIGHT_TEXT = ""  # Change this to your desired copyright
+      MAX_PHOTOS = 500  # Maximum number of photos to display
+      CACHE_TIMEOUT = 3600  # Cache timeout in seconds (1 hour)
+      SITE_THEME = "dark"  # Options: light, dark, primary, secondary, success, danger, warning, info
+      ENABLE_SEARCH = True  # Enable search functionality
      ```
 
 2. **Optional: Filter Which Photos to Display**:
    - In the same `config.py` file, you can filter displayed photos:
      ```python
-     PHOTO_FILTERS = {
-         'tags': ['wedding', 'portrait'],  # Only show photos with these tags
-         'album_ids': ['72157712345678'],  # Only show photos from these albums
-     }
+      # Photo filters
+      # Note: You can filter photos by multiple tags (OR'd together)
+      # or album ID, but not both.  Tags will take priority over album ID.
+      PHOTO_FILTERS = {
+         "tags": "",  # Filter photos by tags (comma-separated list)
+         "album_id": "",  # Filter photos by album ID
+      }
      ```
    - To find an album ID:
      1. Open your album on Flickr.
@@ -112,6 +128,43 @@ Set the required environment variables for your application:
 
    - Leave these fields empty (`[]`) to show all your public photos.
 
+3. **Optional: Customize Navigation Bar**:
+   - In the same `config.py` file, you can control what items are visible in the navigation bar and where social network links point
+   ```python
+      # Navigation bar links
+      NAVBAR_LINKS = [
+         {"name": "Photos", "url": "/photos", "visible": True},
+         {"name": "Albums", "url": "/albums", "visible": True},
+         {"name": "Map", "url": "/map", "visible": True},
+      ]
+
+      # Social media links
+      SOCIAL_LINKS = [
+         {
+            "name": "Twitter",
+            "url": "https://twitter.com",
+            "icon": "fab fa-twitter",
+            "visible": True,
+         },
+         {
+            "name": "Facebook",
+            "url": "https://facebook.com",
+            "icon": "fab fa-facebook",
+            "visible": True,
+         },
+         {
+            "name": "Instagram",
+            "url": "https://instagram.com",
+            "icon": "fab fa-instagram",
+            "visible": True,
+         },
+         {
+            "name": "LinkedIn",
+            "url": "https://linkedin.com",
+            "icon": "fab fa-linkedin",
+            "visible": True,
+         },
+      ]
 ---
 
 ### 6. Running the Application
@@ -177,7 +230,7 @@ Set the required environment variables for your application:
 ## Requirements for Your Web Host
 
 Your web hosting needs to support:
-- Python 3.11 or newer
+- Python 3.9.21 or newer
 - The ability to run Python web applications
 
 ---

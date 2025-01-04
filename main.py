@@ -53,9 +53,13 @@ def index():
             search_query=search_query,
         )
 
+        photos = data.get("photos", {}).get("photo", []) or data.get(
+            "photoset", {}
+        ).get("photo", [])
+
         if debug:
-            return jsonify(data)
-        return render_template("photos.html", data=data)
+            return jsonify(photos)
+        return render_template("photos.html", photos=photos)
     except Exception as e:
         logger.error(f"Error fetching photos: {e}")
         return render_template("error.html", message="Unable to load photos"), 500

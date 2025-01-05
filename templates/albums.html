@@ -5,17 +5,18 @@
 {% block head_scripts %}
 {% endblock %}
 {% block main_content %}
-<div class="row">
+<div class="row g-3">
     {% for photoset in data.photosets.photoset %}
-    <div class="col-lg-6 col-md-6 mb-0">
-        <div class="bg-image hover-overlay rounded" data-mdb-ripple-init data-mdb-ripple-color="light">
-            <img src="{{photoset.primary_photo_extras.url_l or photoset.primary_photo_extras.url_m}}"
-                class="w-100 shadow-1-strong rounded mb-4" />
-            <a href="/photos?album_id={{photoset.id}}" class="mask">
-                <div class="mask" style="background-color: rgba(0, 0, 0, 0.2);">
-                    <div class="d-flex justify-content-center align-items-center h-100">
-                        <p class="text-white mb-0">{{photoset.title._content}}</p>
-                    </div>
+    <div class="col-3">
+        <div class="bg-image hover-overlay rounded position-relative" data-mdb-ripple-init data-mdb-ripple-color="light">
+            <div class="ratio ratio-4x3">
+                <img src="{{ photoset.primary_photo_extras.url_l or photoset.primary_photo_extras.url_m }}" 
+                     class="img-fluid rounded shadow"
+                     alt="{{ photoset.title._content }}" />
+            </div>
+            <a href="/photos?album_id={{ photoset.id }}" class="mask" style="background-color: rgba(0, 0, 0, 0.2);">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <p class="text-white text-center fw-bold mb-0">{{ photoset.title._content }}</p>
                 </div>
             </a>
         </div>

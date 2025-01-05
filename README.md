@@ -171,7 +171,7 @@ For feedback or support, contact:
 
 - [Flickr API](https://www.flickr.com/services/api/)
 - [Bootstrap Framework](https://getbootstrap.com/)
-- [MDBootstrap]{https://mdbootstrap.com/}
+- [MDBootstrap](https://mdbootstrap.com/)
 - [Leaflet](https://leafletjs.com/)
 
 ---

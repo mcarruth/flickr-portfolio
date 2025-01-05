@@ -133,7 +133,7 @@ For deployment instructions, see the [Configuration](#configuration) section.
    ```
 
 3. **Deployment**:
-   - Use deploy to your hosting provider. Ensure your environment variables are set during deployment.
+   - Deploy to your hosting provider. Ensure your environment variables are set during deployment.
 
 ---
 
@@ -171,6 +171,8 @@ For feedback or support, contact:
 
 - [Flickr API](https://www.flickr.com/services/api/)
 - [Bootstrap Framework](https://getbootstrap.com/)
+- [Flask](https://flask.palletsprojects.com/en/stable/)
+- [Jinja](https://jinja.palletsprojects.com/en/stable/)
 - [MDBootstrap](https://mdbootstrap.com/)
 - [Leaflet](https://leafletjs.com/)
 

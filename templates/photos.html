@@ -9,7 +9,7 @@
     {% for photo in photos %}
     <div class="col-12 mb-4">
         <div class="bg-image hover-overlay rounded" data-mdb-ripple-init data-mdb-ripple-color="light">
-            <img src="{{photo.url_l or photo.url_m}}" class="w-100" />
+            <img src="{{photo.url_l or photo.url_c or photo.url_m}}" class="w-100" />
             <a href="/photos/{{photo.id}}">
                 <div class="mask" style="background-color: rgba(0, 0, 0, 0.2);">
                     <div class="d-flex justify-content-center align-items-center h-100">

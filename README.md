@@ -34,7 +34,7 @@ Check out a [demo](https://mikecarruth.com).
 
 ### Screenshots
 ![Homepage](/images/home.png)
-![Album View](/images/album.png)
+![Album View](/images/albums.png)
 ![Map View](/images/map.png)
 ![Photo Detail](/images/photo.png)
 

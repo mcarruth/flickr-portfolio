@@ -78,14 +78,14 @@
             {% block main_content %}{% endblock %}
         </div>
     </main>
-    <footer class="text-center fixed-bottom">
-        <ul class="list-inline">
-            <li class="list-inline-item">{{config['COPYRIGHT_TEXT']}}</li>
-            <li class="list-inline-item"><a class="nav-link" href="https://flickr.com"><i class="fab fa-flickr"></i></a>
-            </li>
-            <li class="list-inline-item"><a class="nav-link" href="https://github.com/mcarruth/flickr-portfolio"><i
-                        class="fab fa-github"></i></a></li>
-        </ul>
+    <footer class="text-center text-lg-start bg-body-tertiary text-muted">
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            {{config['COPYRIGHT_TEXT']}}
+            &nbsp;<a class="text-reset" href="https://flickr.com"><i class="fab fa-flickr"></i></a>
+            &nbsp;<a class="text-reset" href="https://github.com/mcarruth/flickr-portfolio"><i class="fab fa-github"></i></a>
+        </div>
+        <!-- Copyright -->
         {% block footer_content %}{% endblock %}
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.7/umd/popper.min.js"></script>

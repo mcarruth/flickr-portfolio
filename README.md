@@ -70,70 +70,32 @@ For deployment instructions, see the [Configuration](#configuration) section.
 
 ## Configuration
 
-1. **Flickr API**:
-   - Get your API key and secret from [Flickr API Manager](https://www.flickr.com/services/apps/create/apply/).
-   - Set your Flickr API key, secret, and user id in the following environment variables.
+1. **Flickr API**
+    - Get your API key and secret from [Flickr API Manager](https://www.flickr.com/services/apps/create/apply/).
+    - Set your Flickr API key, secret, and user id in the following environment variables.
      ```bash
      export FLICKR_API_KEY=your_api_key
      export FLICKR_SECRET=your_api_secret
      export FLICKR_USER_ID=your_user_id
      ```
 
-2. **Site Settings**:
-   - Rename `example.config.py` `config.py` and apply your customizations to the site.
-   ```python
-    # General settings
-    PORTFOLIO_TITLE = ""
-    COPYRIGHT_TEXT = ""
-    SITE_THEME = "dark"  # Options: light, dark, primary, secondary, success, danger, warning, info
-    ENABLE_SEARCH = True
+2. **Configure Site Settings (Optional)**
+    - Edit `config.py` to customize the app.
 
-    # Photo filters for main 'Home' page.
-    # Note: You can filter photos by multiple tags (OR'd together)
-    # or album ID, but not both.  Tags will take priority over album ID.
-    PHOTO_FILTERS = {
-        "tags": "",  # Filter photos by tags (comma-separated list)
-        "album_id": "",  # Filter photos by album ID
-    }
+3. **Upload Site icons (Optional)**
+    - Create your site icons.
+    ```bash
+    static/android-chrome-192x192.png
+    static/android-chrome-512x512.png
+    static/apple-touch-icon.png
+    static/favicon-16x16.png
+    static/favicon-32x32.png
+    static/favicon.ico
+    static/site.webmanifest
+    ```
 
-    # Navigation bar links
-    NAVBAR_LINKS = [
-        {"name": "Photos", "url": "/photos", "visible": True},
-        {"name": "Albums", "url": "/albums", "visible": True},
-        {"name": "Map", "url": "/map", "visible": True},
-    ]
-
-    # Social media links
-    SOCIAL_LINKS = [
-        {
-            "name": "Twitter",
-            "url": "https://twitter.com",
-            "icon": "fab fa-twitter",
-            "visible": True,
-        },
-        {
-            "name": "Facebook",
-            "url": "https://facebook.com",
-            "icon": "fab fa-facebook",
-            "visible": True,
-        },
-        {
-            "name": "Instagram",
-            "url": "https://instagram.com",
-            "icon": "fab fa-instagram",
-            "visible": True,
-        },
-        {
-            "name": "LinkedIn",
-            "url": "https://linkedin.com",
-            "icon": "fab fa-linkedin",
-            "visible": True,
-        },
-    ]
-   ```
-
-3. **Deployment**:
-   - Deploy to your hosting provider. Ensure your environment variables are set during deployment.
+4. **Deployment**
+    - Deploy to your hosting provider. Ensure your environment variables are set during deployment.
 
 ---
 

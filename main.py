@@ -40,6 +40,7 @@ def get_photos():
     try:
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", app.config["MAX_PHOTOS"], type=int)
+        popular = request.args.get("popular", app.config["PHOTO_FILTERS"]["popular"])
         tags = request.args.get("tags", app.config["PHOTO_FILTERS"]["tags"])
         album_id = request.args.get("album_id", app.config["PHOTO_FILTERS"]["album_id"])
         search_query = request.args.get("search")
@@ -48,6 +49,7 @@ def get_photos():
         data = flickr.get_photos(
             page=page,
             per_page=per_page,
+            popular=popular,
             tags=tags,
             album_id=album_id,
             search_query=search_query,

@@ -68,9 +68,6 @@ class FlickrClient:
             method = "flickr.photos.search"
             params["text"] = search_query
             photos = self._make_request(method, **params)
-        elif popular:
-            method = "flickr.photos.getPopular"
-            photos = self._make_request(method, **params)
         elif tags:
             method = "flickr.photos.search"
             params["tags"] = tags
@@ -78,6 +75,9 @@ class FlickrClient:
         elif album_id:
             method = "flickr.photosets.getPhotos"
             params["photoset_id"] = album_id
+            photos = self._make_request(method, **params)
+        elif popular:
+            method = "flickr.photos.getPopular"
             photos = self._make_request(method, **params)
         elif has_geo:
             method = "flickr.photos.search"

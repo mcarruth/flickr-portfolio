@@ -28,10 +28,6 @@ Flickr Portfolio is a web application designed to showcase your Flickr photos in
 
 ---
 
-## Demo
-
-Check out a [demo](https://mikecarruth.com).  
-
 ### Screenshots
 ![Homepage](/images/home.png)
 ![Album View](/images/albums.png)

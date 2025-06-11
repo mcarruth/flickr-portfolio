@@ -40,7 +40,11 @@ def get_photos():
     try:
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", app.config["MAX_PHOTOS"], type=int)
-        popular = request.args.get("popular", app.config["PHOTO_FILTERS"]["popular"])
+        popular_param = request.args.get("popular")
+        if popular_param is not None:
+            popular = popular_param.lower() == "true"
+        else:
+            popular = app.config["PHOTO_FILTERS"]["popular"]
         tags = request.args.get("tags", app.config["PHOTO_FILTERS"]["tags"])
         album_id = request.args.get("album_id", app.config["PHOTO_FILTERS"]["album_id"])
         search_query = request.args.get("search")

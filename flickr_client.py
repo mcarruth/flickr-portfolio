@@ -124,7 +124,7 @@ class FlickrClient:
             if largest_img_url:
                 break
 
-        # Add the largest image URL to the URLs array
+        # Add the largest image URL to the URLs dictionary
         if largest_img_url:
             merged_data["photo"]["urls"]["img_url"] = largest_img_url
 

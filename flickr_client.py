@@ -1,7 +1,7 @@
 import logging
 import requests
 from functools import lru_cache
-from urllib.parse import urlencode
+from typing import Optional, Dict, Any
 
 # url_sq : s	small square 75x75
 # url_q  : q	large square 150x150
@@ -17,14 +17,16 @@ from urllib.parse import urlencode
 
 class FlickrClient:
     BASE_URL = "https://api.flickr.com/services/rest/"
+    REQUEST_TIMEOUT = 10  # seconds
 
-    def __init__(self, api_key, secret, user_id):
+    def __init__(self, api_key: str, secret: str, user_id: str):
         self.api_key = api_key
         self.secret = secret
         self.user_id = user_id
         self.logger = logging.getLogger(__name__)
 
-    def _make_request(self, method, **params):
+    def _make_request(self, method: str, **params) -> Dict[str, Any]:
+        """Make a request to the Flickr API with timeout and error handling."""
         default_params = {
             "method": method,
             "api_key": self.api_key,
@@ -34,24 +36,28 @@ class FlickrClient:
         params.update(default_params)
 
         try:
-            response = requests.get(self.BASE_URL, params=params)
+            response = requests.get(
+                self.BASE_URL, params=params, timeout=self.REQUEST_TIMEOUT
+            )
             response.raise_for_status()
             return response.json()
+        except requests.exceptions.Timeout:
+            self.logger.error(f"Flickr API request timed out for method: {method}")
+            raise
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Flickr API error: {str(e)}")
             raise
 
-    @lru_cache(maxsize=100)
     def get_photos(
         self,
-        page=1,
-        per_page=100,
-        popular=False,
-        tags=None,
-        album_id=None,
-        has_geo=False,
-        search_query=None,
-    ):
+        page: int = 1,
+        per_page: int = 100,
+        popular: bool = False,
+        tags: Optional[str] = None,
+        album_id: Optional[str] = None,
+        has_geo: bool = False,
+        search_query: Optional[str] = None,
+    ) -> Dict[str, Any]:
         params = {
             "user_id": self.user_id,
             "page": page,
@@ -88,8 +94,7 @@ class FlickrClient:
 
         return photos
 
-    @lru_cache(maxsize=100)
-    def get_photosets(self, page=1, per_page=100):
+    def get_photosets(self, page: int = 1, per_page: int = 100) -> Dict[str, Any]:
         params = {
             "user_id": self.user_id,
             "page": page,
@@ -98,8 +103,7 @@ class FlickrClient:
         }
         return self._make_request("flickr.photosets.getList", **params)
 
-    @lru_cache(maxsize=100)
-    def get_photo(self, photo_id):
+    def get_photo(self, photo_id: str) -> Optional[Dict[str, Any]]:
         params = {"photo_id": photo_id, "secret": self.secret}
         info = self._make_request("flickr.photos.getInfo", **params)
         exif = self._make_request("flickr.photos.getExif", **params)

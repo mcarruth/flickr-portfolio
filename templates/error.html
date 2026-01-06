@@ -1,8 +1,12 @@
+{% extends "base.html" %}
 
-    <div class="container text-center my-5">
+{% block title %} - Error{% endblock %}
+
+{% block main_content %}
+    <div class="text-center my-5">
         <h1 class="text-danger">Oops! Something Went Wrong</h1>
         <p class="lead">We encountered an error while processing your request.</p>
-        
+
         {% if message %}
         <div class="alert alert-warning" role="alert">
             <strong>Error Details:</strong> {{ message }}
@@ -25,3 +29,4 @@
 
         <a href="/" class="btn btn-primary mt-3">Go Back Home</a>
     </div>
+{% endblock %}

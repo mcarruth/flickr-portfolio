@@ -1,16 +1,35 @@
 import os
+import sys
 import logging
 from flask import Flask, render_template, jsonify, request
 from config import Config
 from flickr_client import FlickrClient
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
 # region Configure logging
-logging.basicConfig(level=logging.DEBUG)
+log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+logging.basicConfig(
+    level=getattr(logging, log_level, logging.INFO),
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(Config)
+# endregion
+
+# region Validate required environment variables
+required_env_vars = ["FLICKR_API_KEY", "FLICKR_SECRET", "FLICKR_USER_ID"]
+missing_vars = [var for var in required_env_vars if not os.getenv(var)]
+
+if missing_vars:
+    logger.error(f"Missing required environment variables: {', '.join(missing_vars)}")
+    logger.error("Please set these variables in your .env file or environment")
+    logger.error("See .env.example for reference")
+    sys.exit(1)
 # endregion
 
 # region Initialize Flickr client
@@ -19,6 +38,7 @@ flickr = FlickrClient(
     secret=os.getenv("FLICKR_SECRET"),
     user_id=os.getenv("FLICKR_USER_ID"),
 )
+logger.info("Flickr client initialized successfully")
 # endregion
 
 
@@ -38,16 +58,24 @@ def inject_config():
 @app.route("/photos")
 def get_photos():
     try:
-        page = request.args.get("page", 1, type=int)
-        per_page = request.args.get("per_page", app.config["MAX_PHOTOS"], type=int)
+        # Input validation with reasonable limits
+        page = max(1, min(request.args.get("page", 1, type=int), 1000))
+        per_page = max(1, min(request.args.get("per_page", app.config["MAX_PHOTOS"], type=int), 500))
+
         popular_param = request.args.get("popular")
         if popular_param is not None:
             popular = popular_param.lower() == "true"
         else:
             popular = app.config["PHOTO_FILTERS"]["popular"]
+
         tags = request.args.get("tags", app.config["PHOTO_FILTERS"]["tags"])
         album_id = request.args.get("album_id", app.config["PHOTO_FILTERS"]["album_id"])
-        search_query = request.args.get("search")
+        search_query = request.args.get("search", "")
+
+        # Limit search query length
+        if search_query and len(search_query) > 200:
+            search_query = search_query[:200]
+
         debug = request.args.get("debug", "false").lower() == "true"
 
         data = flickr.get_photos(
@@ -75,8 +103,9 @@ def get_photos():
 def get_albums():
     try:
         debug = request.args.get("debug", "false").lower() == "true"
-        page = request.args.get("page", 1, type=int)
-        per_page = request.args.get("per_page", 100, type=int)
+        # Input validation with reasonable limits
+        page = max(1, min(request.args.get("page", 1, type=int), 1000))
+        per_page = max(1, min(request.args.get("per_page", 100, type=int), 500))
 
         data = flickr.get_photosets(page=page, per_page=per_page)
 
@@ -91,8 +120,9 @@ def get_albums():
 @app.route("/map")
 def get_map():
     try:
-        page = request.args.get("page", 1, type=int)
-        per_page = request.args.get("per_page", app.config["MAX_PHOTOS"], type=int)
+        # Input validation with reasonable limits
+        page = max(1, min(request.args.get("page", 1, type=int), 1000))
+        per_page = max(1, min(request.args.get("per_page", app.config["MAX_PHOTOS"], type=int), 500))
         debug = request.args.get("debug", "false").lower() == "true"
 
         data = flickr.get_photos(page=page, per_page=per_page, has_geo=True)
@@ -123,4 +153,12 @@ def get_photo_by_id(photo_id):
 # endregion
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # Use environment variables for configuration
+    debug_mode = os.getenv("FLASK_DEBUG", "False").lower() == "true"
+    host = os.getenv("FLASK_HOST", "127.0.0.1")
+    port = int(os.getenv("FLASK_PORT", "5000"))
+
+    if debug_mode:
+        logger.warning("Running in DEBUG mode - do not use in production!")
+
+    app.run(host=host, port=port, debug=debug_mode)

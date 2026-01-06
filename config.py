@@ -5,12 +5,18 @@ All user site customizations and configurations should be defined here.
 Note: These are all optional and can be left as-is.
 
 IMPORTANT:
-- Do not expose sensitive keys in public repositories.
-- Refer to the README or documentation for further guidance.
+- Do not store sensitive API keys in this file
+- Use environment variables (.env file) for credentials
+- Refer to the README or documentation for further guidance
 """
 
 
 class Config:
+    """Application configuration settings.
+
+    This class contains all user-customizable settings for the portfolio site.
+    Sensitive credentials should be stored in environment variables, not here.
+    """
 
     # -------------------------------------------------------------------
     # General Settings
@@ -59,25 +65,25 @@ class Config:
             "name": "Twitter",
             "url": "https://twitter.com",  # Update with your Twitter URL
             "icon": "fab fa-twitter",
-            "visible": True,  # Set visible to False to hide
+            "visible": False,  # Set visible to True when configured
         },
         {
             "name": "Facebook",
             "url": "https://facebook.com",  # Update with your Facebook URL
             "icon": "fab fa-facebook",
-            "visible": True,  # Set visible to False to hide
+            "visible": False,  # Set visible to True when configured
         },
         {
             "name": "Instagram",
-            "url": "https://instagram.com",  #
+            "url": "https://instagram.com",  # Update with your Instagram URL
             "icon": "fab fa-instagram",
-            "visible": True,  # Set visible to False to hide
+            "visible": False,  # Set visible to True when configured
         },
         {
             "name": "LinkedIn",
             "url": "https://linkedin.com",  # Update with your LinkedIn URL
             "icon": "fab fa-linkedin",
-            "visible": True,  # Set visible to False to hide
+            "visible": False,  # Set visible to True when configured
         },
     ]
 

@@ -32,7 +32,7 @@ class Config:
     # -------------------------------------------------------------------
 
     PHOTO_FILTERS = {
-        "tags": "",  # Show photos with specific tags on home page ex. "trains, planes, automobiles"
+        "tags": "portfolio",  # Show photos with specific tags on home page ex. "trains, planes, automobiles"
         "album_id": "",  # Show photos from a specific album ex. "72157601424097768"
         "popular": True,  # Show popular photos on home page
         # Note: Only one of the above filters can be active at a time.  They are listed in order of priority.

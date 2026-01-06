@@ -2,6 +2,8 @@
 
 Flickr Portfolio is a web application designed to showcase your Flickr photos in an elegant, mobile-friendly portfolio. It syncs with your Flickr account, displaying your recent photos, albums, and geotagged images on your hosted site. Flickr portfolio allows professional photographers and hobbyists to host their own custom portfolio site while still using Flickr as their online storage solution.
 
+Go on and take it for a [spin](http://portfolio.mikecarruth.org/).
+
 ---
 
 ## Table of Contents
